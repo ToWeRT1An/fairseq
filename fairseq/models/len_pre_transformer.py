@@ -202,15 +202,14 @@ class TransformerEncoder(FairseqEncoder):
         for layer in self.layers:
             x = layer(x, encoder_padding_mask)
 
-        if self.normalize:
-            x = self.layer_norm(x)
+        # T x B x C -> B x T x C 
         x = x.transpose(0,1)
 
-
+        # T x B x C -> B x T x C 
         x = self.layer_norm(x)
         x = self.activation_fn(self.fc1(x))
         x = F.dropout(x, p=self.dropout, training=self.training)
-
+        # B x T x C  -> B x C
         x = x.mean(1)
         x = x.squeeze(1)
 
@@ -226,7 +225,7 @@ class TransformerEncoder(FairseqEncoder):
 
 
         return {
-            'encoder_out': x,  # T x B x C
+            'encoder_out': x,  #  B x C
             'encoder_padding_mask': encoder_padding_mask,  # B x T
         }
 
@@ -241,12 +240,13 @@ class TransformerEncoder(FairseqEncoder):
         Returns:
             *encoder_out* rearranged according to *new_order*
         """
+        print('----in reorder------')
+        print('encoder_out shape {}'.format(encoder_out['encoder_out'].shape))
+        print('new_order shape {}'.format(new_order))
         if encoder_out['encoder_out'] is not None:
             encoder_out['encoder_out'] = \
-                encoder_out['encoder_out'].index_select(1, new_order)
-        if encoder_out['encoder_padding_mask'] is not None:
-            encoder_out['encoder_padding_mask'] = \
-                encoder_out['encoder_padding_mask'].index_select(0, new_order)
+                encoder_out['encoder_out'].index_select(0, new_order)
+
         return encoder_out
 
     def max_positions(self):

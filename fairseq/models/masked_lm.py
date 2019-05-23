@@ -92,10 +92,11 @@ class MaskedLMModel(BaseFairseqModel):
                             help='use custom param initialization for BERT')
 
         # misc params
-        parser.add_argument('--activation-fn', choices=['relu', 'gelu', 'gelu_accurate'],
-                            help='Which activation function to use')
+        parser.add_argument('--activation-fn',
+                            choices=utils.get_available_activation_fns(),
+                            help='activation function to use')
         parser.add_argument('--pooler-activation-fn',
-                            choices=['relu', 'gelu', 'gelu_accurate', 'tanh'],
+                            choices=utils.get_available_activation_fns(),
                             help='Which activation function to use for pooler layer.')
         parser.add_argument('--encoder-normalize-before', action='store_true',
                             help='apply layernorm before each encoder block')
@@ -159,6 +160,7 @@ class MaskedLMEncoder(FairseqEncoder):
         self.embed_out = None
         self.sentence_projection_layer = None
         self.sentence_out_dim = args.sentence_class_num
+        self.lm_output_learned_bias = None
 
         # Remove head is set to true during fine-tuning
         self.load_softmax = not getattr(args, 'remove_head', False)
@@ -252,7 +254,11 @@ class MaskedLMEncoder(FairseqEncoder):
             ] = torch.FloatTensor(1)
         if not self.load_softmax:
             for k in list(state_dict.keys()):
-                if "embed_out.weight" in k or "sentence_projection_layer.weight" in k:
+                if (
+                    "embed_out.weight" in k or
+                    "sentence_projection_layer.weight" in k or
+                    "lm_output_learned_bias" in k
+                ):
                     del state_dict[k]
         return state_dict
 

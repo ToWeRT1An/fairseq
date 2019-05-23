@@ -42,8 +42,7 @@ def main(args, init_distributed=False):
     # Setup task, e.g., translation, language modeling, etc.
     task = tasks.setup_task(args)
 
-    # Load dataset splits
-    task.load_dataset(args.train_subset, combine=True, epoch=0)
+    # Load valid dataset (we load training data below, based on the latest checkpoint)
     for valid_sub_split in args.valid_subset.split(','):
         task.load_dataset(valid_sub_split, combine=True, epoch=0)
 
@@ -65,27 +64,9 @@ def main(args, init_distributed=False):
         args.max_sentences,
     ))
 
-    max_positions = utils.resolve_max_positions(
-        task.max_positions(),
-        model.max_positions(),
-    )
-    # Initialize dataloader
-    epoch_itr = task.get_batch_iterator(
-        dataset=task.dataset(args.train_subset),
-        max_tokens=args.max_tokens,
-        max_sentences=args.max_sentences,
-        max_positions=max_positions,
-        ignore_invalid_inputs=True,
-        required_batch_size_multiple=args.required_batch_size_multiple,
-        seed=args.seed,
-        num_shards=args.distributed_world_size,
-        shard_id=args.distributed_rank,
-        num_workers=args.num_workers,
-    )
-
-    # Load the latest checkpoint if one is available
-    checkpoint_utils.load_checkpoint(
-        args, trainer, epoch_itr, max_positions, task)
+    # Load the latest checkpoint if one is available and restore the
+    # corresponding train iterator
+    extra_state, epoch_itr = checkpoint_utils.load_checkpoint(args, trainer)
 
     # Train until the learning rate gets too small
     max_epoch = args.max_epoch or math.inf
@@ -100,18 +81,21 @@ def main(args, init_distributed=False):
 
         train(args, trainer, task, epoch_itr)
 
-        if epoch_itr.epoch % args.validate_interval == 0:
+        if not args.disable_validation and epoch_itr.epoch % args.validate_interval == 0:
             valid_losses = validate(args, trainer, task, epoch_itr, valid_subsets)
+        else:
+            valid_losses = [None]
 
         # only use first validation loss to update the learning rate
         lr = trainer.lr_step(epoch_itr.epoch, valid_losses[0])
 
         # save checkpoint
         if epoch_itr.epoch % args.save_interval == 0:
-            checkpoint_utils.save_checkpoint(
-                args, trainer, epoch_itr, valid_losses[0])
+            checkpoint_utils.save_checkpoint(args, trainer, epoch_itr, valid_losses[0])
 
-        epoch_itr = checkpoint_utils.reload_train(args, epoch_itr, max_positions, task)
+        if ':' in getattr(args, 'data', ''):
+            # sharded data: get train iterator for next epoch
+            epoch_itr = trainer.get_train_iterator(epoch_itr.epoch)
     train_meter.stop()
     print('| done training in {:.1f} seconds'.format(train_meter.sum))
 
@@ -159,7 +143,12 @@ def train(args, trainer, task, epoch_itr):
             trainer.get_meter('wps').reset()
 
         num_updates = trainer.get_num_updates()
-        if args.save_interval_updates > 0 and num_updates % args.save_interval_updates == 0 and num_updates > 0:
+        if (
+            not args.disable_validation
+            and args.save_interval_updates > 0
+            and num_updates % args.save_interval_updates == 0
+            and num_updates > 0
+        ):
             valid_losses = validate(args, trainer, task, epoch_itr, valid_subsets)
             checkpoint_utils.save_checkpoint(args, trainer, epoch_itr, valid_losses[0])
 

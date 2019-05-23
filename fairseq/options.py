@@ -234,6 +234,10 @@ def add_dataset_args(parser, train=False, gen=False):
         group.add_argument('--valid-subset', default='valid', metavar='SPLIT',
                            help='comma separated list of data subsets to use for validation'
                                 ' (train, valid, valid1, test, test1)')
+        group.add_argument('--validate-interval', type=int, default=1, metavar='N',
+                           help='validate every N epochs')
+        group.add_argument('--disable-validation', action='store_true',
+                           help='disable validation')
         group.add_argument('--max-sentences-valid', type=int, metavar='N',
                            help='maximum number of sentences in a validation batch'
                                 ' (defaults to --max-sentences)')
@@ -330,6 +334,8 @@ def add_checkpoint_args(parser):
                        help='if set, does not load lr scheduler state from the checkpoint')
     group.add_argument('--optimizer-overrides', default="{}", type=str, metavar='DICT',
                        help='a dictionary used to override optimizer args when loading a checkpoint')
+    group.add_argument('--reset-meters', action='store_true',
+                       help='if set, does not load meters from the checkpoint')
     group.add_argument('--save-interval', type=int, default=1, metavar='N',
                        help='save a checkpoint every N epochs')
     group.add_argument('--save-interval-updates', type=int, default=0, metavar='N',
@@ -342,8 +348,6 @@ def add_checkpoint_args(parser):
                        help='don\'t save models or checkpoints')
     group.add_argument('--no-epoch-checkpoints', action='store_true',
                        help='only store last and best checkpoints')
-    group.add_argument('--validate-interval', type=int, default=1, metavar='N',
-                       help='validate every N epochs')
     # fmt: on
     return group
 

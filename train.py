@@ -134,8 +134,6 @@ def train(args, trainer, task, epoch_itr):
             else:
                 extra_meters[k].update(v)
             stats[k] = extra_meters[k].avg
-        print('-----stats[acc]----')
-        print(stats['train_acc'].val)
         progress.log(stats, tag='train', step=stats['num_updates'])
 
         # ignore the first mini-batch in words-per-second calculation

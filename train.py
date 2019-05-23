@@ -20,9 +20,10 @@ from fairseq import checkpoint_utils, distributed_utils, options, progress_bar, 
 from fairseq.data import iterators
 from fairseq.trainer import Trainer
 from fairseq.meters import AverageMeter, StopwatchMeter
-
-
+from tensorboardX import SummaryWriter
 def main(args, init_distributed=False):
+
+
     utils.import_user_module(args)
 
     assert args.max_tokens is not None or args.max_sentences is not None, \
@@ -96,6 +97,7 @@ def main(args, init_distributed=False):
     valid_subsets = args.valid_subset.split(',')
     while lr > args.min_lr and epoch_itr.epoch < max_epoch and trainer.get_num_updates() < max_update:
         # train for one epoch
+
         train(args, trainer, task, epoch_itr)
 
         if epoch_itr.epoch % args.validate_interval == 0:
@@ -148,6 +150,8 @@ def train(args, trainer, task, epoch_itr):
             else:
                 extra_meters[k].update(v)
             stats[k] = extra_meters[k].avg
+        print('-----stats[acc]----')
+        print(stats['train_acc'].val)
         progress.log(stats, tag='train', step=stats['num_updates'])
 
         # ignore the first mini-batch in words-per-second calculation
@@ -199,6 +203,8 @@ def get_training_stats(trainer):
         stats['loss_scale'] = trainer.get_meter('loss_scale')
     stats['wall'] = round(trainer.get_meter('wall').elapsed_time)
     stats['train_wall'] = trainer.get_meter('train_wall')
+    if trainer.get_meter('train_acc') is not None:
+        stats['train_acc']=trainer.get_meter('train_acc')
     return stats
 
 
@@ -266,6 +272,8 @@ def get_valid_stats(trainer):
     if hasattr(checkpoint_utils.save_checkpoint, 'best'):
         stats['best_loss'] = min(
             checkpoint_utils.save_checkpoint.best, stats['loss'].avg)
+    if trainer.get_meter('valid_acc') is not None:
+        stats['valid_acc']=trainer.get_meter('valid_acc')
     return stats
 
 

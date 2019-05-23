@@ -204,6 +204,7 @@ def convert_padding_direction(src_tokens, padding_idx, right_to_left=False, left
 
 def item(tensor):
     if hasattr(tensor, 'item'):
+        print(tensor.item())
         return tensor.item()
     if hasattr(tensor, '__getitem__'):
         return tensor[0]

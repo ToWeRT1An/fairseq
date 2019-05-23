@@ -75,7 +75,9 @@ class Trainer(object):
             self.meters['loss_scale'] = AverageMeter()  # dynamic loss scale
         self.meters['wall'] = TimeMeter()      # wall time in seconds
         self.meters['train_wall'] = StopwatchMeter()  # train wall time in seconds
-
+        self.meters['train_acc'] = AverageMeter()
+        self.meters['valid_acc'] = AverageMeter()
+     
     @property
     def model(self):
         if self._wrapped_model is None:
@@ -218,7 +220,8 @@ class Trainer(object):
                     sample, self.model, self.criterion, self.optimizer,
                     ignore_grad
                 )
-
+                print('--------in train_step,logoutput---')
+                print('log.acc {}'.format(logging_output['acc'] ))
                 if not ignore_grad:
                     logging_outputs.append(logging_output)
                     sample_sizes.append(sample_size)
@@ -310,8 +313,11 @@ class Trainer(object):
             )
             self.meters['train_loss'].update(logging_output.get('loss', 0), sample_size)
             if 'train_acc' in self.meters:
+                print('-----trainer get train_acc meter---')
                 self.meters['train_acc'].update(
                     logging_output.get('acc', 0), sample_size)
+                print('in logging_output acc is {}'.format(logging_output.get('acc',0)))
+                print('in meters is {}'.format(self.meters['train_acc'].val))
 
             if 'nll_loss' in logging_output:
                 self.meters['train_nll_loss'].update(logging_output.get('nll_loss', 0), ntokens)

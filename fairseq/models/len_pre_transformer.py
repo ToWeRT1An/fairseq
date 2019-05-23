@@ -240,9 +240,7 @@ class TransformerEncoder(FairseqEncoder):
         Returns:
             *encoder_out* rearranged according to *new_order*
         """
-        print('----in reorder------')
-        print('encoder_out shape {}'.format(encoder_out['encoder_out'].shape))
-        print('new_order shape {}'.format(new_order))
+
         if encoder_out['encoder_out'] is not None:
             encoder_out['encoder_out'] = \
                 encoder_out['encoder_out'].index_select(0, new_order)

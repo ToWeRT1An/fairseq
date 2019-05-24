@@ -10,6 +10,8 @@ import os
 import pdb
 import sys
 
+print(pdb.__file__)
+
 
 __all__ = ['set_trace']
 

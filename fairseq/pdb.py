@@ -11,7 +11,7 @@ import os
 import sys
 
 import importlib.util
-spec = importlib.util.spec_from_file_location("pdb","/n/home05/simonx/.conda/envs/tf_cuda9/lib/python3.6")
+spec = importlib.util.spec_from_file_location("pdb","/n/home05/simonx/.conda/envs/tf_cuda9/lib/python3.6/pdb.py")
 pdb = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pdb)
 

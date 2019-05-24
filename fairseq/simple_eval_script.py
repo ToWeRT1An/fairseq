@@ -1,7 +1,7 @@
 from fairseq import data, options, tasks, utils
 
 # Parse command-line arguments for generation
-parser = options.get_generation_parser(default_task='simple_classification')
+parser = options.get_generation_parser(default_task='len_pre_transformer')
 args = options.parse_args_and_arch(parser)
 
 # Setup task

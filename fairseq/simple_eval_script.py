@@ -49,7 +49,7 @@ while total_num < 100:
         label_name = task.target_dictionary.string([label_idx])
         print('({:.2f})\t{} '.format(score, label_name))
     print("-----true length is {}".format(tgt_text))
-    if (int(tgt_text) is in top_labels):
+    if (int(tgt_text)  in top_labels):
         print("successful")
         acc += 1
     total_num += 1

@@ -44,7 +44,7 @@ while total_num < 100:
     preds = model(**batch['net_input'])
 
     # Print top 3 predictions and their log-probabilities
-    top_scores, top_labels = preds[0].topk(k=3)
+    top_scores, top_labels = preds[0].topk(k=5)
     for score, label_idx in zip(top_scores, top_labels):
         label_name = task.target_dictionary.string([label_idx])
         print('({:.2f})\t{} '.format(score, label_name))

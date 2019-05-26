@@ -259,8 +259,6 @@ class Trainer(object):
                     sample, self.model, self.criterion, self.optimizer,
                     ignore_grad
                 )
-                print('--------in train_step,logoutput---')
-                print('log.acc {}'.format(logging_output['acc'] ))
                 if not ignore_grad:
                     logging_outputs.append(logging_output)
                     sample_sizes.append(sample_size)

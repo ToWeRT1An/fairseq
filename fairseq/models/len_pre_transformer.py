@@ -206,6 +206,8 @@ class TransformerEncoder(FairseqEncoder):
         x = x.transpose(0,1)
 
         # T x B x C -> B x T x C 
+
+        #---------below is new part for length prediction-------
         x = self.layer_norm(x)
         x = self.activation_fn(self.fc1(x))
         x = F.dropout(x, p=self.dropout, training=self.training)

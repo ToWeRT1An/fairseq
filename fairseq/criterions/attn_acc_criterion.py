@@ -13,7 +13,7 @@ from . import FairseqCriterion, register_criterion
 from torchvision.utils import save_image
 
 @register_criterion('attn_acc_criterion')
-class AccLabelSmoothedCrossEntropyCriterion(FairseqCriterion):
+class AttnAccCriterion(FairseqCriterion):
 
     def __init__(self, args, task):
         super().__init__(args, task)

@@ -226,7 +226,7 @@ class TransformerEncoder(FairseqEncoder):
 
         # encoder layers
         for layer in self.layers:
-            x, attn = layer(x, encoder_padding_mask)
+            x = layer(x, encoder_padding_mask)
 
         if self.normalize:
             x = self.layer_norm(x)

@@ -36,12 +36,9 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         3) logging outputs to display while training
         """
         net_output = model(**sample['net_input'])
-        print('----net_output-----')
-        print(net_output)
-        '''
-        a = net_output
+
         print('-------criterion attn------')
-        print(extra['attn'].shape)
+        print(net_output['attn'].shape)
         target = model.get_targets(sample, a)
         print('------criterion target is ----')
         print(target.shape)

@@ -40,11 +40,11 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
 
         for i in range(net_output[1]['attn'].shape[0]):
             save_image(net_output[1]['attn'][i],'./images/'+
-                str(time.time())+'_'+
+                str('{:15.7f}'.format(time.time()))+'_'+
                 str(net_output[1]['attn'].shape[0])+'_'+
                 str(net_output[1]['attn'][i].shape[0])+'_'+
                 str(net_output[1]['attn'][i].shape[1])+'_'+
-                '_'+str(i)+
+                '_'+str(10000+i)+
                 '.jpg')
       
 

@@ -104,6 +104,8 @@ class TransformerModel(FairseqEncoderDecoderModel):
                                  'Must be used with adaptive_loss criterion'),
         parser.add_argument('--adaptive-softmax-dropout', type=float, metavar='D',
                             help='sets adaptive softmax dropout for the tail projections')
+        parser.add_argument('--top-k', type=int, metavar='D',
+                            help='use top k estimaiton to calculate acc')       
         # fmt: on
 
     @classmethod
@@ -763,7 +765,7 @@ def base_architecture(args):
 
     args.decoder_output_dim = getattr(args, 'decoder_output_dim', args.decoder_embed_dim)
     args.decoder_input_dim = getattr(args, 'decoder_input_dim', args.decoder_embed_dim)
-
+    args.top_k = getattr(args,'top-k',3)
 
 @register_model_architecture('atten_pic_generate_transformer', 'atten_pic_generate_transformer_iwslt_de_en')
 def transformer_iwslt_de_en(args):
@@ -775,11 +777,13 @@ def transformer_iwslt_de_en(args):
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 1024)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 4)
     args.decoder_layers = getattr(args, 'decoder_layers', 6)
+    args.top_k = getattr(args,'top-k',3)
     base_architecture(args)
 
 
 @register_model_architecture('atten_pic_generate_transformer', 'atten_pic_generate_transformer_wmt_en_de')
 def transformer_wmt_en_de(args):
+    args.top_k = getattr(args,'top-k',3)
     base_architecture(args)
 
 
@@ -794,18 +798,21 @@ def transformer_vaswani_wmt_en_de_big(args):
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 4096)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 16)
     args.dropout = getattr(args, 'dropout', 0.3)
+    args.top_k = getattr(args,'top-k',3)
     base_architecture(args)
 
 
 @register_model_architecture('atten_pic_generate_transformer', 'atten_pic_generate_transformer_vaswani_wmt_en_fr_big')
 def transformer_vaswani_wmt_en_fr_big(args):
     args.dropout = getattr(args, 'dropout', 0.1)
+    args.top_k = getattr(args,'top-k',3)
     transformer_vaswani_wmt_en_de_big(args)
 
 
 @register_model_architecture('atten_pic_generate_transformer', 'atten_pic_generate_transformer_wmt_en_de_big')
 def transformer_wmt_en_de_big(args):
     args.attention_dropout = getattr(args, 'attention_dropout', 0.1)
+    args.top_k = getattr(args,'top-k',3)
     transformer_vaswani_wmt_en_de_big(args)
 
 
@@ -816,4 +823,5 @@ def transformer_wmt_en_de_big_t2t(args):
     args.decoder_normalize_before = getattr(args, 'decoder_normalize_before', True)
     args.attention_dropout = getattr(args, 'attention_dropout', 0.1)
     args.activation_dropout = getattr(args, 'activation_dropout', 0.1)
+    args.top_k = getattr(args,'top-k',3)
     transformer_vaswani_wmt_en_de_big(args)

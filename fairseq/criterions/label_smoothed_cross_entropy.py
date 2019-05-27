@@ -44,6 +44,7 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
                 str(net_output[1]['attn'].shape[0])+'_'+
                 str(net_output[1]['attn'][i].shape[0])+'_'+
                 str(net_output[1]['attn'][i].shape[1])+'_'+
+                '_'+str(i)
                 '.jpg')
       
 

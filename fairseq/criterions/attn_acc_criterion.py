@@ -38,6 +38,10 @@ class AccLabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         net_output,attn = model(**sample['net_input'])
         print('-------criterion attn------')
         print(attn.shape)
+        target = model.get_targets(sample, net_output).view(-1, 1)
+        print('------criterion target is ----')
+        print(target.shape)
+        print(target)
         for i in range(attn.shape[0]):
             save_image(attn[i],'./images/'+str(i)+'-'+str(attn.shape)+'.jpg')
 
@@ -58,8 +62,6 @@ class AccLabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         lprobs = model.get_normalized_probs(net_output, log_probs=True)
         lprobs = lprobs.view(-1, lprobs.size(-1))
         target = model.get_targets(sample, net_output).view(-1, 1)
-        print('------criterion target is ----')
-        print(target)
         v,index = torch.topk(lprobs,top_k,dim=-1)
         acc = 0
         for i in range(index.shape[0]):

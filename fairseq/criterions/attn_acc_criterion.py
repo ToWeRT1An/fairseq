@@ -10,7 +10,7 @@ import math
 from fairseq import utils
 import torch
 from . import FairseqCriterion, register_criterion
-
+from torchvision.utils import save_image
 
 @register_criterion('acc_label_smoothed_cross_entropy')
 class AccLabelSmoothedCrossEntropyCriterion(FairseqCriterion):
@@ -35,7 +35,13 @@ class AccLabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         2) the sample size, which is used as the denominator for the gradient
         3) logging outputs to display while training
         """
-        net_output = model(**sample['net_input'])
+        net_output,attn = model(**sample['net_input'])
+        print('-------criterion attn------')
+        print(attn.shape)
+        for i in range(attn.shape[0]):
+            save_image(attn[i],'./images/'+str(i)+'-'+str(attn.shape)+'.jpg')
+
+        
         loss, nll_loss, acc= self.compute_loss(model, net_output, sample,self.top_k, reduce=reduce)
         sample_size = sample['target'].size(0) if self.args.sentence_avg else sample['ntokens']
         logging_output = {
@@ -52,6 +58,8 @@ class AccLabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         lprobs = model.get_normalized_probs(net_output, log_probs=True)
         lprobs = lprobs.view(-1, lprobs.size(-1))
         target = model.get_targets(sample, net_output).view(-1, 1)
+        print('------criterion target is ----')
+        print(target)
         v,index = torch.topk(lprobs,top_k,dim=-1)
         acc = 0
         for i in range(index.shape[0]):

@@ -39,7 +39,7 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
 
         print('-------criterion attn------')
         print(net_output[1]['attn'].shape)
-        target = model.get_targets(sample, a)
+        target = model.get_targets(sample, net_output)
         print('------criterion target is ----')
         print(target.shape)
       

@@ -11,6 +11,7 @@ from fairseq import utils
 
 from . import FairseqCriterion, register_criterion
 from torchvision.utils import save_image
+import time
 
 @register_criterion('label_smoothed_cross_entropy')
 class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
@@ -38,7 +39,12 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         net_output = model(**sample['net_input'])
 
         for i in range(net_output[1]['attn'].shape[0]):
-            save_image(net_output[1]['attn'][i],'./images/'+str(net_output[1]['attn'][i].shape)+'.jpg')
+            save_image(net_output[1]['attn'][i],'./images/'+
+                str(int(time.time()))+'_'+
+                str(net_output[1]['attn'].shape[0])+'_'+
+                str(net_output[1]['attn'][i].shape[0])+'_'+
+                str(net_output[1]['attn'][i].shape[1])+'_'+
+                '.jpg')
       
 
         loss, nll_loss = self.compute_loss(model, net_output, sample, reduce=reduce)

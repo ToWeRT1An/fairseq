@@ -23,7 +23,7 @@ def get_argv(argv):
 
 	return inputfold, outputfile
 
-inputfold, outputfile = get_argv()
+inputfold, outputfile = get_argv(sys.argv[1:])
 
 images = []
 for (dirpath, dirnames, filenames) in walk(inputfold):

@@ -50,10 +50,10 @@ for img in images:
     label = torch.zeros(attn.shape)
     label = label.scatter_(1,indices,1).sum(dim=0)
 
-    time, bach_size, tgt_length, src_length, seri_num = img.split('_')
+    parse = img.split('.')[1].split('_')
 
-    json_content ={'bach_size':bach_size,'tgt_length':tgt_length,
-				'src_length':src_length,'seri_num':seri_num,
+    json_content ={'bach_size':parse[1],'tgt_length':parse[2],
+				'src_length':parse[3],'seri_num':parse[-1],
 				'respose_pos':indices.numpy().tolist(),
 				'word_trans':label.numpy().tolist()}
 

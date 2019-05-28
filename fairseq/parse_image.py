@@ -43,7 +43,7 @@ JSON = {}
 id = 0
 for img in images:
     Img = Image.open(inputfold+img)
-    attn = trans(Img).squeeze(0)
+    attn = trans(Img)[0].squeeze(0)
     print(attn.shape)
     print(attn)
     values, indices = torch.topk(attn,1)

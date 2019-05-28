@@ -1,7 +1,32 @@
 from os import walk
 from PIL import Image
+import sys, getopt
+
+def get_argv():
+	inputfold = ''
+	outputfile = ''
+
+	try:
+		opts,args = getopt.getopt(argv,"hi:o:",['ifold=','ofile='])
+	except getopt.GetoptError:
+		print('parse_image.py -i <inputfold> -o <outputfile>')
+		sys.exit(2)
+	for opt, arg in opts:
+		if opt == '-h':
+			print('parse_image.py -i <inputfold> -o <outputfile>')
+		elif opt in ('-i','--ifold'):
+			inputfold = arg
+		elif opt in ('-o','--ofile'):
+			outputfile = arg
+	print('inputfold is ',inputfold)
+	print('outputfile is ',outputfile)
+
+	return inputfold, outputfile
+
+inputfold, outputfile = get_argv()
+
 images = []
-for (dirpath, dirnames, filenames) in walk('./'):
+for (dirpath, dirnames, filenames) in walk(inputfold):
 	images.extend(filenames)
 	break
 images.sort(key = lambda x: x)
@@ -12,7 +37,7 @@ from torchvision import transforms
 import matplotlib.pyplot as pyplot
 import json
 
-json_file = open('len_label.json','w')
+json_file = open(outputfile,'w')
 trans = transforms.ToTensor()
 JSON = {}
 id = 0

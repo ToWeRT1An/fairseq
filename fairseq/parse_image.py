@@ -2,7 +2,7 @@ from os import walk
 from PIL import Image
 import sys, getopt
 
-def get_argv():
+def get_argv(argv):
 	inputfold = ''
 	outputfile = ''
 

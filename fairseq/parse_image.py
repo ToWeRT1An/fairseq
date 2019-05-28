@@ -42,7 +42,7 @@ trans = transforms.ToTensor()
 JSON = {}
 id = 0
 for img in images:
-    Img = Image.open(img)
+    Img = Image.open(inputfold+img)
     attn = trans(Img).squeeze(0)
     print(attn.shape)
     print(attn)

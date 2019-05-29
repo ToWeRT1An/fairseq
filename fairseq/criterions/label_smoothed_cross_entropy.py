@@ -75,6 +75,7 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         loss = (1. - self.eps) * nll_loss + eps_i * smooth_loss
 
         #-----------------------------------------------------------------------
+        lprobs2 = lprobs2.view(-1,lprobs2.size(-1))
         nll_loss2 = -lprobs2.gather(dim=-1, index=target2)
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)
 

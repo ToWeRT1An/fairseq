@@ -103,7 +103,7 @@ class GroupIncrementalDecoder(FairseqDecoder):
                 labels[i]=label
             return labels
 
-        len_pre_labels = torch.Long(get_len_label(net_output[1]['attn']))
+        len_pre_labels = torch.long(get_len_label(net_output[1]['attn']))
 
         if hasattr(self, 'adaptive_softmax') and self.adaptive_softmax is not None:
             if sample is not None:

@@ -12,7 +12,7 @@ from fairseq import utils
 from . import FairseqCriterion, register_criterion
 from torchvision.utils import save_image
 import time
-
+import torch
 @register_criterion('label_smoothed_cross_entropy')
 class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
 

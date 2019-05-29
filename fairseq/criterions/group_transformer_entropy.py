@@ -56,6 +56,12 @@ class GroupTransformerEntropy(FairseqCriterion):
         lprobs2 = lprobs2.view(-1,lprobs2.size(-1))
         target1 = model.get_targets(sample, net_output).view(-1, 1)
 
+        print('------lprobs2---')
+        print(lprobs2.shape)
+        print(lprobs2)
+        print('------target2----')
+        print(target2.shape)
+        print(target2)
         non_pad_mask = target1.ne(self.padding_idx)
         nll_loss1 = -lprobs1.gather(dim=-1, index=target1)[non_pad_mask]
         smooth_loss1 = -lprobs1.sum(dim=-1, keepdim=True)[non_pad_mask]

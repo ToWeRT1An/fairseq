@@ -37,6 +37,7 @@ __all__ = [
     'FairseqLanguageModel',
     'FairseqModel',
     'FairseqMultiModel',
+    'GroupIncrementalDecoder',
 ]
 
 

@@ -7,7 +7,7 @@
 
 from fairseq.models import FairseqDecoder
 import torch
-
+from torch import utils
 class GroupIncrementalDecoder(FairseqDecoder):
     """Base class for incremental decoders.
 

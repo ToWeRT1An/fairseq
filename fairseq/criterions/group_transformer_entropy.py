@@ -55,13 +55,6 @@ class GroupTransformerEntropy(FairseqCriterion):
         lprobs1 = lprobs1.view(-1, lprobs1.size(-1))
         lprobs2 = lprobs2.view(-1,lprobs2.size(-1))
         target1 = model.get_targets(sample, net_output).view(-1, 1)
-       
-        print('------lprobs2---')
-        print(lprobs2.shape)
-        print(lprobs2)
-        print('------target2----')
-        print(target2.shape)
-        print(target2)
 
         non_pad_mask = target1.ne(self.padding_idx)
         nll_loss1 = -lprobs1.gather(dim=-1, index=target1)[non_pad_mask]
@@ -87,10 +80,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         
         len_pre.view(net_output[1]['attn'].shape[0],-1)
         target2.view(net_output[1]['attn'].shape[0],-1)
-        print('----len_pre----target2')
-        print(len_pre.shape)
-        print(target2.shape)
-        
+
         acc2 = torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum()/(len_pre.shape[0])
 
         return loss1, nll_loss1, acc2

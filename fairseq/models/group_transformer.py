@@ -785,4 +785,4 @@ def base_architecture(args):
 
     args.decoder_output_dim = getattr(args, 'decoder_output_dim', args.decoder_embed_dim)
     args.decoder_input_dim = getattr(args, 'decoder_input_dim', args.decoder_embed_dim)
-    args.length_pre_dim = getattr(args,'length_pre_dim',50)
+    args.length_pre_dim = getattr(args,'length_pre_dim',49)

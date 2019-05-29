@@ -98,7 +98,7 @@ class GroupIncrementalDecoder(FairseqDecoder):
             for i in range(attns.shape[0]):
                 attn = attns[i]
                 values, indices = torch.topk(attn,1)
-                label = torch.zeros(attn.shape)
+                label = torch.zeros(attn.shape).to(attns.device)
                 label = label.scatter_(1,indices,1).sum(dim=0)
                 labels[i]=label
             return labels

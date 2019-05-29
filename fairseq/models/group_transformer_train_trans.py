@@ -14,7 +14,7 @@ import torch.nn.functional as F
 from fairseq import options, utils
 from fairseq.models import (
     FairseqEncoder,
-    FairseqIncrementalDecoder,
+    GroupIncrementalDecoder,
     FairseqEncoderDecoderModel,
     register_model,
     register_model_architecture,

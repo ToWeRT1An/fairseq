@@ -74,6 +74,8 @@ class GroupTransformerEntropy(FairseqCriterion):
         '''
         #-----------------------------------------------------------------------
         lprobs2 = lprobs2.view(-1,lprobs2.size(-1))
+        print('--------lprobs2')
+        print(lprobs2.shape)
         nll_loss2 = -lprobs2.gather(dim=-1, index=target2)      
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)
         if reduce:

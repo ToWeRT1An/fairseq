@@ -60,10 +60,10 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         return loss, sample_size, logging_output
 
     def compute_loss(self, model, net_output, sample, reduce=True):
-        lprobs,lprobs2,target2 = model.get_normalized_probs(net_output, log_probs=True)
+        lprobs= model.get_normalized_probs(net_output, log_probs=True)
         lprobs = lprobs.view(-1, lprobs.size(-1))
         target = model.get_targets(sample, net_output).view(-1, 1)
-        '''
+        
         non_pad_mask = target.ne(self.padding_idx)
         nll_loss = -lprobs.gather(dim=-1, index=target)[non_pad_mask]
         smooth_loss = -lprobs.sum(dim=-1, keepdim=True)[non_pad_mask]
@@ -73,28 +73,9 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
 
         eps_i = self.eps / lprobs.size(-1)
         loss = (1. - self.eps) * nll_loss + eps_i * smooth_loss
-        '''
-        #-----------------------------------------------------------------------
-        lprobs2 = lprobs2.view(-1,lprobs2.size(-1))
-        nll_loss2 = -lprobs2.gather(dim=-1, index=target2)
-        smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)
-        if reduce:
-            nll_loss2 = nll_loss2.sum()
-            smooth_loss2 = smooth_loss2.sum()
-        eps_i2 = self.eps / lprobs2.size(-1)
-        loss2 = (1. - self.eps) * nll_loss2 + eps_i2 * smooth_loss2
-        '''
-        len_pre = torch.topk(lprobs2,1)[-1].squeeze(-1)
-
-        acc1 = torch.eq(len_pre,target2).sum()/(len_pre.shape[0])
+    
         
-        len_pre.view(net_output[1]['attn'].shape[0],-1)
-        target2.view(net_output[1]['attn'].shape[0],-1)
-
-        acc2 = torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum()/(len_pre.shape[0])
-        '''
-        
-        return loss2, nll_loss2
+        return loss, nll_loss
 
     @staticmethod
     def aggregate_logging_outputs(logging_outputs):

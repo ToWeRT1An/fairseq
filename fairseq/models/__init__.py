@@ -20,7 +20,7 @@ from .fairseq_model import (
     FairseqModel,
     FairseqMultiModel,
 )
-
+from .group_transformer_entropy import group_transformer_entropy
 from .composite_encoder import CompositeEncoder
 from .distributed_fairseq_model import DistributedFairseqModel
 

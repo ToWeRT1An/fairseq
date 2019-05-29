@@ -63,7 +63,7 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         lprobs,lprobs2,target2 = model.get_normalized_probs(net_output, log_probs=True)
         lprobs = lprobs.view(-1, lprobs.size(-1))
         target = model.get_targets(sample, net_output).view(-1, 1)
-
+        '''
         non_pad_mask = target.ne(self.padding_idx)
         nll_loss = -lprobs.gather(dim=-1, index=target)[non_pad_mask]
         smooth_loss = -lprobs.sum(dim=-1, keepdim=True)[non_pad_mask]
@@ -90,8 +90,8 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
 
         acc2 = torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum()/(len_pre.shape[0])
 
-        '''
-        return loss, nll_loss
+        
+        return loss2, nll_loss2
 
     @staticmethod
     def aggregate_logging_outputs(logging_outputs):

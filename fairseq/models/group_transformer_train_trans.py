@@ -28,7 +28,7 @@ from fairseq.modules import (
 )
 
 
-@register_model('group_based_transformer')
+@register_model('group_transformer_train_trans')
 class TransformerModel(FairseqEncoderDecoderModel):
     """
     Transformer model from `"Attention Is All You Need" (Vaswani, et al, 2017)
@@ -259,6 +259,9 @@ class TransformerEncoder(FairseqEncoder):
         if encoder_out['encoder_padding_mask'] is not None:
             encoder_out['encoder_padding_mask'] = \
                 encoder_out['encoder_padding_mask'].index_select(0, new_order)
+        if encoder_out['len_pre'] is not None:
+            encoder_out['len_pre']= \
+                encoder_out['len_pre'].index_select(0,new_order)
         return encoder_out
 
     def max_positions(self):
@@ -428,7 +431,8 @@ class TransformerDecoder(FairseqIncrementalDecoder):
         if self.project_out_dim is not None:
             x = self.project_out_dim(x)
 
-        return x, {'attn': attn, 'inner_states': inner_states}
+        return x, {'attn': attn, 'inner_states': inner_states,
+                   'len_pre':encoder_out['len_pre'] if encoder_out is not None else None}
 
     def output_layer(self, features, **kwargs):
         """Project features to the vocabulary size."""
@@ -752,7 +756,7 @@ def Linear(in_features, out_features, bias=True):
     return m
 
 
-@register_model_architecture('group_based_transformer', 'group_based_transformer')
+@register_model_architecture('group_transformer_train_trans', 'group_transformer_train_trans')
 def base_architecture(args):
     args.encoder_embed_path = getattr(args, 'encoder_embed_path', None)
     args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 512)

@@ -53,20 +53,13 @@ class GroupTransformerEntropy(FairseqCriterion):
         lprobs1,lprobs2,target2 = model.get_normalized_probs(net_output, log_probs=True)
         lprobs1 = lprobs1.view(-1, lprobs1.size(-1))
         lprobs2 = lprobs2.view(-1,lprobs2.size(-1))
-        target1 = model.get_targets(sample, net_output).view(-1, 1)
 
+        target1 = model.get_targets(sample, net_output).view(-1, 1)
         non_pad_mask = target1.ne(self.padding_idx)
         nll_loss1 = -lprobs1.gather(dim=-1, index=target1)[non_pad_mask]
-        print('-----lprobs1',lprobs1.shape)
-        print('------lprobs1.topk',torch.topk(lprobs1,10))
-        print('----null-loss1')
-        print(nll_loss1.shape)
-        print('topk of nll_loss1:',torch.topk(nll_loss1,10)[0])
-        print('non_pad_mask',non_pad_mask)
         smooth_loss1 = -lprobs1.sum(dim=-1, keepdim=True)[non_pad_mask]
-        print('--------smooth_loss1',smooth_loss1,smooth_loss1.shape)
-        print('--------topk of smooth_loss1',torch.topk(smooth_loss1,10)[0])
-        print('--------smooth_loss1sum',smooth_loss1.sum())
+
+
         nll_loss2 = -lprobs2.gather(dim=-1, index=target2)
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)
 
@@ -88,23 +81,9 @@ class GroupTransformerEntropy(FairseqCriterion):
         
         len_pre.view(net_output[1]['attn'].shape[0],-1)
         target2.view(net_output[1]['attn'].shape[0],-1)
-        print('torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1))',torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)))
+
         acc2 = torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum()/(len_pre.shape[0])
-        print('------smooth_loss1')
-        print(smooth_loss1)
-        print('-----eps_i1')
-        print(eps_i1)
-        print('-----self.eps')
-        print(self.eps)
-        print('-----(1. - self.eps) * nll_loss1')
-        print((1. - self.eps) * nll_loss1)
-        print('-----eps_i1 * smooth_loss1')
-        print(eps_i1 * smooth_loss1)
-        print('------loss1')
-        print(type(loss1))
-        print(loss1)
-        print(loss1.data)
-        print(loss1.item())
+
 
         return loss1, nll_loss1
 

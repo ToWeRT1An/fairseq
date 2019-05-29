@@ -70,8 +70,7 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         if reduce:
             nll_loss = nll_loss.sum()
             smooth_loss = smooth_loss.sum()
-        print('------smooth_loss')
-        print(smooth_loss)
+
         eps_i = self.eps / lprobs.size(-1)
         loss = (1. - self.eps) * nll_loss + eps_i * smooth_loss
         return loss, nll_loss

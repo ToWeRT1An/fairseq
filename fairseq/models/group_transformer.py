@@ -28,7 +28,7 @@ from fairseq.modules import (
 )
 
 
-@register_model('group_transformer_train_trans')
+@register_model('group_transformer')
 class TransformerModel(FairseqEncoderDecoderModel):
     """
     Transformer model from `"Attention Is All You Need" (Vaswani, et al, 2017)
@@ -756,7 +756,7 @@ def Linear(in_features, out_features, bias=True):
     return m
 
 
-@register_model_architecture('group_transformer_train_trans', 'group_transformer_train_trans')
+@register_model_architecture('group_transformer', 'group_transformer')
 def base_architecture(args):
     args.encoder_embed_path = getattr(args, 'encoder_embed_path', None)
     args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 512)

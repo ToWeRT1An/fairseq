@@ -51,8 +51,16 @@ class GroupTransformerEntropy(FairseqCriterion):
 
     def compute_loss(self, model, net_output, sample, reduce=True):
         lprobs,lprobs2,target2 = model.get_normalized_probs(net_output, log_probs=True)
+        print('-----target2')
+        print(type(target2))
+        print(target2.shape)
+        print(target2)
         lprobs = lprobs.view(-1, lprobs.size(-1))
         target = model.get_targets(sample, net_output).view(-1, 1)
+        print('-----target')
+        print(type(target))
+        print(target.shape)
+        print(target)
         '''
         non_pad_mask = target.ne(self.padding_idx)
         nll_loss = -lprobs.gather(dim=-1, index=target)[non_pad_mask]
@@ -66,16 +74,14 @@ class GroupTransformerEntropy(FairseqCriterion):
         '''
         #-----------------------------------------------------------------------
         lprobs2 = lprobs2.view(-1,lprobs2.size(-1))
-        #nll_loss2 = -lprobs2.gather(dim=-1, index=target2)
-        nll_loss = -lprobs.gather(dim=-1, index=target)
+        nll_loss2 = -lprobs2.gather(dim=-1, index=target2)      
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)
         if reduce:
-            #nll_loss2 = nll_loss2.sum()
-            nll_loss = nll_loss.sum()
+            nll_loss2 = nll_loss2.sum()
             smooth_loss2 = smooth_loss2.sum()
         eps_i2 = self.eps / lprobs2.size(-1)
-        loss2 = (1. - self.eps) * nll_loss + eps_i2 * smooth_loss2
-        #loss2 = (1. - self.eps) * nll_loss2 + eps_i2 * smooth_loss2
+
+        loss2 = (1. - self.eps) * nll_loss2 + eps_i2 * smooth_loss2
         '''
         len_pre = torch.topk(lprobs2,1)[-1].squeeze(-1)
 

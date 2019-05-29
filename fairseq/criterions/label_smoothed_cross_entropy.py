@@ -78,9 +78,12 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         lprobs2 = lprobs2.view(-1,lprobs2.size(-1))
         nll_loss2 = -lprobs2.gather(dim=-1, index=target2)
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)
-
+        if reduce:
+            nll_loss2 = nll_loss2.sum()
+            smooth_loss2 = smooth_loss2.sum()
         eps_i2 = self.eps / lprobs2.size(-1)
         loss2 = (1. - self.eps) * nll_loss2 + eps_i2 * smooth_loss2
+        '''
         len_pre = torch.topk(lprobs2,1)[-1].squeeze(-1)
 
         acc1 = torch.eq(len_pre,target2).sum()/(len_pre.shape[0])
@@ -89,7 +92,7 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         target2.view(net_output[1]['attn'].shape[0],-1)
 
         acc2 = torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum()/(len_pre.shape[0])
-
+        '''
         
         return loss2, nll_loss2
 

@@ -57,7 +57,8 @@ class GroupTransformerEntropy(FairseqCriterion):
 
         non_pad_mask = target1.ne(self.padding_idx)
         nll_loss1 = -lprobs1.gather(dim=-1, index=target1)[non_pad_mask]
-
+        print('-----lprobs1',lprobs1.shape)
+        print('------lprobs1.topk',torch.topk(lprobs1,10))
         print('----null-loss1')
         print(nll_loss1.shape)
         print('topk of nll_loss1:',torch.topk(nll_loss1,10)[0])

@@ -52,9 +52,9 @@ class GroupTransformerEntropy(FairseqCriterion):
     def compute_loss(self, model, net_output, sample, reduce=True):
         lprobs,lprobs2,target2 = model.get_normalized_probs(net_output, log_probs=True)
         print('-----target2')
-        print(target2.sum())
+        print(torch.topk(target2,2)[0])
         print(target2.shape)
-        print(target2)
+        print(target2.transpose(0,1))
         lprobs = lprobs.view(-1, lprobs.size(-1))
         target = model.get_targets(sample, net_output).view(-1, 1)
         print('-----target')

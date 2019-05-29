@@ -71,8 +71,8 @@ class GroupTransformerEntropy(FairseqCriterion):
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)
 
         if reduce:
-            nll_loss1 = nll_loss1.sum()
-            smooth_loss1 = smooth_loss1.sum()
+            nll_loss1 = nll_loss1.sum() 
+            smooth_loss1 = smooth_loss1.sum() if smooth_loss1.sum() < 2*10**8 else 2*10**8
             nll_loss2 = nll_loss2.sum()
             smooth_loss2 = smooth_loss2.sum()
 
@@ -88,7 +88,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         
         len_pre.view(net_output[1]['attn'].shape[0],-1)
         target2.view(net_output[1]['attn'].shape[0],-1)
-
+        print('torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1))',torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)))
         acc2 = torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum()/(len_pre.shape[0])
         print('------smooth_loss1')
         print(smooth_loss1)

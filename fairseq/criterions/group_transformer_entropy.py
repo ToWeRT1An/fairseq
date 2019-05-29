@@ -64,6 +64,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         print('-lprobs1.sum(dim=-1, keepdim=True)',(-lprobs1.sum(dim=-1, keepdim=True)[non_pad_mask]).shape)
         smooth_loss1 = -lprobs1.sum(dim=-1, keepdim=True)[non_pad_mask]
         print('--------smooth_loss1',smooth_loss1)
+        print('--------smooth_loss1sum',smooth_loss1.sum())
         nll_loss2 = -lprobs2.gather(dim=-1, index=target2)
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)
 

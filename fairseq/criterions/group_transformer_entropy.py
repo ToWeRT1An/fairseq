@@ -72,7 +72,7 @@ class GroupTransformerEntropy(FairseqCriterion):
 
         if reduce:
             nll_loss1 = nll_loss1.sum() 
-            smooth_loss1 = smooth_loss1.sum() if smooth_loss1.sum() < 2*10**8 else 2*10**8
+            smooth_loss1 = smooth_loss1.sum() if smooth_loss1.sum() < 2*10**6 else 2*10**6
             nll_loss2 = nll_loss2.sum()
             smooth_loss2 = smooth_loss2.sum()
 

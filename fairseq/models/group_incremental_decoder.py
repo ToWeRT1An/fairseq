@@ -6,7 +6,7 @@
 # can be found in the PATENTS file in the same directory.
 
 from fairseq.models import FairseqDecoder
-
+import torch
 
 class GroupIncrementalDecoder(FairseqDecoder):
     """Base class for incremental decoders.

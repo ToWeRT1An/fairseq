@@ -60,6 +60,7 @@ class GroupTransformerEntropy(FairseqCriterion):
 
         print('----null-loss1')
         print(nll_loss1)
+        print('topk of nll_loss1:',torch.topk(null-loss1,10)[0])
         smooth_loss1 = -lprobs1.sum(dim=-1, keepdim=True)[non_pad_mask]
         nll_loss2 = -lprobs2.gather(dim=-1, index=target2)
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)

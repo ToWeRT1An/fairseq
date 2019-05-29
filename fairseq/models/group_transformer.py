@@ -261,7 +261,7 @@ class TransformerEncoder(FairseqEncoder):
                 encoder_out['encoder_padding_mask'].index_select(0, new_order)
         if encoder_out['len_pre'] is not None:
             encoder_out['len_pre']= \
-                encoder_out['len_pre'].index_select(0,new_order)
+                encoder_out['len_pre'].index_select(1,new_order)
         return encoder_out
 
     def max_positions(self):

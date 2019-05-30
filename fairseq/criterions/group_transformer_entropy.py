@@ -75,7 +75,8 @@ class GroupTransformerEntropy(FairseqCriterion):
         normal = (target2 < self.len_pre_dim)
         target2[normal] += int((target2[too_big]-self.len_pre_dim).sum()/normal.sum())
         target2[too_big]=self.len_pre_dim-1 
-
+        print('-----------target2')
+        print(target2.transpose(0,1))
         nll_loss2 = -lprobs2.gather(dim=-1, index=target2)      
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)
         if reduce:
@@ -93,6 +94,8 @@ class GroupTransformerEntropy(FairseqCriterion):
         target2.view(net_output[1]['attn'].shape[0],-1)
 
         acc2 = torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum()/(len_pre.shape[0])
+
+        print('------acc2 is ',acc2)
 
         
         return loss, nll_loss, acc2

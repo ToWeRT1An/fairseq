@@ -102,7 +102,7 @@ class GroupIncrementalDecoder(FairseqDecoder):
                 for i in range(len(wrong_lines)):
                     if wrong_lines[i]==1:
                         indices[i][0]=indices[i][-1]
-                indices[len(wrong_lines)-1,0]=a.shape[-1]-1
+                indices[len(wrong_lines)-1,0]=attn.shape[-1]-1
 
                 label = torch.zeros(attn.shape).to(attns.device)
                 label = label.scatter_(1,indices,1).sum(dim=0)

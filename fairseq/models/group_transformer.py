@@ -215,6 +215,14 @@ class TransformerEncoder(FairseqEncoder):
         """
         # embed tokens and positions
         x = self.embed_scale * self.embed_tokens(src_tokens)
+        print('------src_tokens')
+        print(src_tokens)
+        print(src_tokens.shape)
+        print('------x---------')
+        print(x)
+        print(x.shape)
+
+
         if self.embed_positions is not None:
             x += self.embed_positions(src_tokens)
         x = F.dropout(x, p=self.dropout, training=self.training)

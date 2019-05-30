@@ -99,9 +99,9 @@ class GroupIncrementalDecoder(FairseqDecoder):
                 attn = attns[i]
                 values, indices = torch.topk(attn,2)
                 wrong_lines =(indices[:,0]==attn.shape[-1]-1)
-                for i in range(len(wrong_lines)):
-                    if wrong_lines[i]==1:
-                        indices[i][0]=indices[i][-1]
+                for j in range(len(wrong_lines)):
+                    if wrong_lines[j]==1:
+                        indices[j][0]=indices[j][-1]
                 indices[len(wrong_lines)-1,0]=attn.shape[-1]-1
 
                 label = torch.zeros(attn.shape).to(attns.device)

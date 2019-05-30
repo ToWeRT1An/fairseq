@@ -73,7 +73,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         #restrict target2 in range(0~len_pre_dim)
         too_big = (target2 >=self.len_pre_dim)
         normal = (target2 < self.len_pre_dim)
-        target2[normal] += int((target2[too_big]-self.len_pre_dim).sum()/target2[normal].sum())
+        target2[normal] += int((target2[too_big]-self.len_pre_dim).sum()/normal.sum())
         target2[too_big]=self.len_pre_dim-1 
 
         print('---------target2')

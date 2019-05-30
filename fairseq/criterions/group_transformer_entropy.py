@@ -39,7 +39,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         """
         net_output = model(**sample['net_input'])
 
-        loss, nll_loss = self.compute_loss(model, net_output, sample, reduce=reduce)
+        loss, nll_loss,acc = self.compute_loss(model, net_output, sample, reduce=reduce)
         sample_size = sample['target'].size(0) if self.args.sentence_avg else sample['ntokens']
         logging_output = {
             'loss': utils.item(loss.data) if reduce else loss.data,
@@ -47,6 +47,7 @@ class GroupTransformerEntropy(FairseqCriterion):
             'ntokens': sample['ntokens'],
             'nsentences': sample['target'].size(0),
             'sample_size': sample_size,
+            'acc': acc
         }
         return loss, sample_size, logging_output
 
@@ -94,7 +95,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         acc2 = torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum()/(len_pre.shape[0])
 
         
-        return loss, nll_loss
+        return loss, nll_loss, acc2
 
     @staticmethod
     def aggregate_logging_outputs(logging_outputs):

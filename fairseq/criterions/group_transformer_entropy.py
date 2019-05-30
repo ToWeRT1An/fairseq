@@ -93,7 +93,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         target2.view(net_output[1]['attn'].shape[0],-1)
         print('-----------target2')
         print(target2)
-        print(torch.topk(target2,3))
+        print(torch.topk(target2.squeeze(-1),3))
         acc2 = torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum()/(len_pre.shape[0])
 
         print('------acc2 is ',acc2)

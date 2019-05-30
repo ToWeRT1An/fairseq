@@ -76,6 +76,9 @@ class GroupTransformerEntropy(FairseqCriterion):
         target2[normal] += int((target2[too_big]-self.len_pre_dim).sum()/target2[normal].sum())
         target2[too_big]=self.len_pre_dim-1 
 
+        print('---------target2')
+        print(target2)
+
         nll_loss2 = -lprobs2.gather(dim=-1, index=target2)      
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)
         if reduce:

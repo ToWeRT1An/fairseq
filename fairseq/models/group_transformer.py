@@ -216,11 +216,8 @@ class TransformerEncoder(FairseqEncoder):
         # embed tokens and positions
         x = self.embed_scale * self.embed_tokens(src_tokens)
         print('------src_tokens')
-        print(src_tokens)
+        print(src_tokens[:,-2:].transpose(0,1))
         print(src_tokens.shape)
-        print('------x---------')
-        print(x)
-        print(x.shape)
 
 
         if self.embed_positions is not None:

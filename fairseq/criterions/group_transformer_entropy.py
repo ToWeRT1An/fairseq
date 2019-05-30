@@ -19,7 +19,7 @@ class GroupTransformerEntropy(FairseqCriterion):
     def __init__(self, args, task):
         super().__init__(args, task)
         self.eps = args.label_smoothing
-        self.len_pre_dim = args.len_pre_dim
+        self.len_pre_dim = args.length_pre_dim
 
     @staticmethod
     def add_args(parser):

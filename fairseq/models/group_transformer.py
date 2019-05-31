@@ -215,10 +215,6 @@ class TransformerEncoder(FairseqEncoder):
         """
         # embed tokens and positions
         x = self.embed_scale * self.embed_tokens(src_tokens)
-        print('------src_tokens')
-        print(src_tokens[:,-2:].transpose(0,1))
-        print(src_tokens.shape)
-
 
         if self.embed_positions is not None:
             x += self.embed_positions(src_tokens)
@@ -390,6 +386,7 @@ class TransformerDecoder(GroupIncrementalDecoder):
                 - a dictionary with any model-specific outputs
         """
         # embed positions
+        
         positions = self.embed_positions(
             prev_output_tokens,
             incremental_state=incremental_state,

@@ -350,7 +350,7 @@ class Trainer(object):
             )
             self.meters['train_loss'].update(logging_output.get('loss', 0), sample_size)
             if 'train_acc' in self.meters:
-          
+                print('-----train_acc is ',self.meters['train_acc'].val)
                 self.meters['train_acc'].update(
                     logging_output.get('acc', 0), sample_size)
 

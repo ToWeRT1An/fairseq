@@ -49,6 +49,7 @@ class GroupTransformerEntropy(FairseqCriterion):
             'sample_size': sample_size,
             'acc': acc
         }
+        print('acc2 is ',acc)
         return loss, sample_size, logging_output
 
     def compute_loss(self, model, net_output, sample, reduce=True):
@@ -94,9 +95,6 @@ class GroupTransformerEntropy(FairseqCriterion):
 
         acc2 = float(torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum())/float((len_pre.shape[0]))
 
-        print('------acc2 is ',acc2)
-
-        
         return loss2, nll_loss2, acc2
 
     @staticmethod

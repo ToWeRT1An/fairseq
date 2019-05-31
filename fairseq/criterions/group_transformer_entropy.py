@@ -110,5 +110,5 @@ class GroupTransformerEntropy(FairseqCriterion):
             'ntokens': ntokens,
             'nsentences': nsentences,
             'sample_size': sample_size,
-            'acc':sum(log.get('loss', 0) for log in logging_outputs) / sample_size 
+            'acc':sum(log.get('loss', 0) for log in logging_outputs) / nsentences
         }

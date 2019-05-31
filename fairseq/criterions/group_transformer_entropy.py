@@ -94,8 +94,9 @@ class GroupTransformerEntropy(FairseqCriterion):
         target2.view(net_output[1]['attn'].shape[0],-1)
 
         acc2 = float(torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum())/float((len_pre.shape[0]))
-
-        return loss2, nll_loss2, acc2
+        loss_total = loss+loss2
+        nll_loss_total = nll_loss2 + nll_loss
+        return loss_total, nll_loss_total, acc2
 
     @staticmethod
     def aggregate_logging_outputs(logging_outputs):

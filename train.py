@@ -55,7 +55,7 @@ def main(args, init_distributed=False):
         
         if i == 73 or i == 74:
             parm.requires_grad = True
-        else:
+        elif i !=0 :
             parm.requires_grad = False
         print('id: ',i,' shape ',parm.shape,'trainnable',parm.requires_grad)
 

@@ -53,10 +53,7 @@ def main(args, init_distributed=False):
     #------set part of the model trainnable
     for i, parm in  enumerate(list(model.parameters())):
         
-        if i == 73 or i == 74:
-            parm.requires_grad = True
-        elif i !=0 :
-            parm.requires_grad = False
+        parm.requires_grad = True
         print('id: ',i,' shape ',parm.shape,'trainnable',parm.requires_grad)
 
 
@@ -168,7 +165,7 @@ def train(args, trainer, task, epoch_itr):
 
     # log end-of-epoch stats
     stats = get_training_stats(trainer)
-    
+
 
     for k, meter in extra_meters.items():
         stats[k] = meter.avg

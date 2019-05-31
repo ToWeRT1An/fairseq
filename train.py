@@ -53,7 +53,7 @@ def main(args, init_distributed=False):
     #------set part of the model trainnable
     for i, parm in  enumerate(list(model.parameters())):
         
-        if i = 73 or i == 74:
+        if i == 73 or i == 74:
             parm.requires_grad = True
         else:
             parm.requires_grad = False

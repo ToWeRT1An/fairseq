@@ -97,7 +97,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         print('------acc2 is ',acc2)
 
         
-        return loss, nll_loss, acc2
+        return loss2, nll_loss2, acc2
 
     @staticmethod
     def aggregate_logging_outputs(logging_outputs):

@@ -103,10 +103,12 @@ class GroupTransformerEntropy(FairseqCriterion):
         ntokens = sum(log.get('ntokens', 0) for log in logging_outputs)
         nsentences = sum(log.get('nsentences', 0) for log in logging_outputs)
         sample_size = sum(log.get('sample_size', 0) for log in logging_outputs)
+
         return {
             'loss': sum(log.get('loss', 0) for log in logging_outputs) / sample_size / math.log(2),
             'nll_loss': sum(log.get('nll_loss', 0) for log in logging_outputs) / ntokens / math.log(2),
             'ntokens': ntokens,
             'nsentences': nsentences,
             'sample_size': sample_size,
+            'acc',sum(log.get('loss', 0) for log in logging_outputs) / sample_size 
         }

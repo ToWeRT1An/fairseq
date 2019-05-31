@@ -168,6 +168,7 @@ def train(args, trainer, task, epoch_itr):
 
     # log end-of-epoch stats
     stats = get_training_stats(trainer)
+    
     print('-----stats is ')
     print(stats['train_acc'].val)
     for k, meter in extra_meters.items():

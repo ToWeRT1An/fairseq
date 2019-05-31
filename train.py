@@ -48,13 +48,16 @@ def main(args, init_distributed=False):
 
     # Build model and criterion
     model = task.build_model(args)
+
+
     #------set part of the model trainnable
     for i, parm in  enumerate(list(model.parameters())):
         
-        if i == 73 or i == 74:
+        if i = 73 or i == 74:
+            parm.requires_grad = True
+        else:
             parm.requires_grad = False
         print('id: ',i,' shape ',parm.shape,'trainnable',parm.requires_grad)
-
 
 
     criterion = task.build_criterion(args)

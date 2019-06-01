@@ -354,7 +354,7 @@ class Trainer(object):
             if 'train_acc' in self.meters:
 
                 self.meters['train_acc'].update(
-                    logging_output.get('acc', 0), sample_size)
+                    logging_output.get('ruaacc', 0), sample_size)
             if 'nll_loss' in logging_output:
                 self.meters['train_nll_loss'].update(logging_output.get('nll_loss', 0), ntokens)
         except OverflowError as e:

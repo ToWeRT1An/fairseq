@@ -112,5 +112,5 @@ class GroupTransformerEntropy(FairseqCriterion):
             'ntokens': ntokens,
             'nsentences': nsentences,
             'sample_size': sample_size,
-            'acc':acc
+            'ruaacc':acc
         }

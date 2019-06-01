@@ -236,8 +236,7 @@ class TransformerEncoder(FairseqEncoder):
             x = self.layer_norm(x)
 
         len_pre = self.length_pre_layer(x)
-        print('------len_pre')
-        print(len_pre)
+
         return {
             'encoder_out': x,  # T x B x C
             'encoder_padding_mask': encoder_padding_mask,  # B x T

@@ -108,17 +108,12 @@ class GroupIncrementalDecoder(FairseqDecoder):
                                 indices[j] = all_share
                                 all_share = (all_share+1)%attn.shape[-1]
                          
-                            if m  not in indices and m < attn.shape[-1]: 
+                            if m  not in indices :
                                 
                                 indices[j]=m
                          
                                 break
-                            elif m not in indices and m >= attn.shape[-1]: 
-                                
-                                indices[j] = all_share
-                                all_share = (all_share+1)%attn.shape[-1]
-                        
-                                break
+
                 indices[len(wrong_lines)-1,0]=attn.shape[-1]-1
                 label = torch.zeros(attn.shape).to(attns.device)
            

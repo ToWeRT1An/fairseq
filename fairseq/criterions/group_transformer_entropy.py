@@ -86,22 +86,13 @@ class GroupTransformerEntropy(FairseqCriterion):
 
         loss2 = (1. - self.eps) * nll_loss2 + eps_i2 * smooth_loss2
 
-        print('lprobs2 is ')
-        print(lprobs2.shape)
         len_pre = torch.topk(lprobs2,1)[-1].squeeze(-1)
-        print('len_pre is')
-        print(len_pre.shape)
+
         acc1 = torch.eq(len_pre,target2).sum()/(len_pre.shape[0])
         
         len_pre = len_pre.view(net_output[1]['attn'].shape[0],-1)
         target2 = target2.view(net_output[1]['attn'].shape[0],-1)
-        print('attn shape ')
-        print(net_output[1]['attn'].shape)
-
-        print('-----target2 is')
-        print(target2.shape)
-        print('-----len_pre')
-        print(len_pre.shape)
+ 
         acc2 = float(torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum())/float((len_pre.shape[0]))
         loss_total = loss+loss2
         nll_loss_total = nll_loss2 + nll_loss

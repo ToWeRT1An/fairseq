@@ -148,9 +148,9 @@ class SequenceGenerator(object):
         encoder_outs = model.forward_encoder(encoder_input)
         # print len_pre 
         print('sample is ------')
-        print(sample)
+        print(sample['target'].shape)
         print('encoder_out len_pre')
-        print(encoder_outs['len_pre'].shape)
+        print(encoder_outs)
 
 
 

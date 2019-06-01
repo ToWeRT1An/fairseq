@@ -154,12 +154,15 @@ class SequenceGenerator(object):
         print(tgt_len.shape)
         print('encoder_out is')
         print(encoder_outs[0]['len_pre'].shape)
-        len_pre = torch.topk(encoder_outs[0]['len_pre'],1)[-1].squeeze(-1).sum(dim=-1)
-        print('len_pre is')
-        print(len_pre)
-        acc=torch.eq(tgt_len.squeeze(-1),len_pre).sum().float()/float(sample['target'].shape[0])     
+        accs = []
+        for b in range(beam_size):
 
-        print('len pre acc is {:10.4f}'.format(acc))
+            len_pre = torch.topk(encoder_outs[0]['len_pre'][b],1)[-1].squeeze(-1).sum(dim=-1)
+            print('len_pre is')
+            print(len_pre)
+            acc=torch.eq(tgt_len.squeeze(-1),len_pre).sum().float()/float(sample['target'].shape[0])     
+            accs.append(acc)
+        print('len pre acc is {:10.4f}'.format(max(acc)[0]))
 
         new_order = torch.arange(bsz).view(-1, 1).repeat(1, beam_size).view(-1)
         new_order = new_order.to(src_tokens.device).long()

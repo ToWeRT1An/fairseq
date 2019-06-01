@@ -80,7 +80,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         print(lprobs2)
         print(lprobs2.shape)
         print('target2 is')
-        print(target2)
+        print((target2==0).sum())
         print(target2.shape)
         nll_loss2 = -lprobs2.gather(dim=-1, index=target2)      
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)

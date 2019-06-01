@@ -149,7 +149,8 @@ class SequenceGenerator(object):
         # print len_pre 
         print('sample is ------')
         print(sample['target'].shape)
-        tgt_len = torch.new_full(sample['target'].shape[0],sample['target'].shape[1]).int()
+        tgt_len = torch.zeros(sample['target'].shape[0]).\
+            new_full(sample['target'].shape[0],sample['target'].shape[1]).int()
 
         accs = []
         for beam_num in range(beam_size):

@@ -160,7 +160,7 @@ class SequenceGenerator(object):
             len_pre = torch.topk(encoder_outs[0]['len_pre'][b],1)[-1].squeeze(-1).sum(dim=-1)
             print('len_pre is')
             print(len_pre)
-            acc=torch.eq(tgt_len.squeeze(-1),len_pre).sum().float()/float(sample['target'].shape[0])     
+            acc=torch.eq(tgt_len.squeeze(-1),len_pre.int()).sum().float()/float(sample['target'].shape[0])     
             accs.append(acc)
         print('len pre acc is {:10.4f}'.format(max(acc)[0]))
 

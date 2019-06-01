@@ -150,7 +150,7 @@ class SequenceGenerator(object):
         print('sample is ------')
         print(sample)
         print('encoder_out len_pre')
-        print(encoder_out['len_pre'].shape)
+        print(encoder_outs['len_pre'].shape)
 
 
 

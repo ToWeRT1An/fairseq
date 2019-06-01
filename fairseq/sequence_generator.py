@@ -158,7 +158,7 @@ class SequenceGenerator(object):
         print('L ')
         print(L)
         print('tgt')
-        print(sample['target'].shape[1])
+        print(tgt_len.squeeze(-1))
         acc=torch.eq(tgt_len.squeeze(-1),L.int()).sum().float()/float(sample['target'].shape[0]) 
 
         print('len pre acc is{}'.format(acc))

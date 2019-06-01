@@ -150,11 +150,11 @@ class SequenceGenerator(object):
         print('sample is ------')
         print(sample['target'].shape)
         tgt_len = torch.zeros(sample['target'].shape[0]).\
-            new_full((sample['target'].shape[0],1),sample['target'].shape[1]).int().to(sample.device)
+            new_full((sample['target'].shape[0],1),sample['target'].shape[1]).int().to(sample['target'].device)
 
         accs = []
         for beam_num in range(beam_size):
-            len_pre = encoder_outs[beam_num]['len_pre'].sum().int().to(sample.device)
+            len_pre = encoder_outs[beam_num]['len_pre'].sum().int().to(sample['target'].device)
             accs.append(torch.eq(tgt_len.squeeze(-1),len_pre).sum().float()/sample['target'].shape[0])
         print('len pre acc is ',max(accs))
 

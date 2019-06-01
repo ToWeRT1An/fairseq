@@ -100,8 +100,9 @@ class GroupTransformerEntropy(FairseqCriterion):
         loss_total = loss+loss2
         nll_loss_total = nll_loss2 + nll_loss
         print('acc2 should be ',acc2)
-        return torch.tensor((1-acc2)*10).to(len_pre.device), \
-                torch.tensor((1-acc2)*10).to(len_pre.device), acc2
+
+        acc_loss = torch.tensor((1-acc2)*10,require_grad = True).to(len_pre.device)
+        return acc_loss,acc_loss, acc2
 
     @staticmethod
     def aggregate_logging_outputs(logging_outputs):

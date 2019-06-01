@@ -98,19 +98,30 @@ class GroupIncrementalDecoder(FairseqDecoder):
             for i in range(attns.shape[0]):
                 attn = attns[i]
                 values, indices = torch.topk(attn,1)
-            
+              
                 wrong_lines =(indices==attn.shape[-1]-1)
-            
+                all_share = 0
                 for j in range(len(wrong_lines)):
                     if wrong_lines[j]==1:
-                        for m in range(len(wrong_lines)):
-                            if m  not in indices:                   
+                        for m in range(attn.shape[-1]):
+                            if m in indices and m == attn.shape[-1]-1:
+                                indices[j] = all_share
+                                all_share = (all_share+1)%attn.shape[-1]
+                         
+                            if m  not in indices and m < attn.shape[-1]: 
+                                
                                 indices[j]=m
+                         
                                 break
-
+                            elif m not in indices and m >= attn.shape[-1]: 
+                                
+                                indices[j] = all_share
+                                all_share = (all_share+1)%attn.shape[-1]
+                        
+                                break
                 indices[len(wrong_lines)-1,0]=attn.shape[-1]-1
                 label = torch.zeros(attn.shape).to(attns.device)
-
+           
                 label = label.scatter_(1,indices[:,0].unsqueeze(-1),1).sum(dim=0)
                 labels[i]=label
             return labels

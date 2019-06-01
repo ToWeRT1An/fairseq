@@ -76,7 +76,10 @@ class GroupTransformerEntropy(FairseqCriterion):
         normal = (target2 < self.len_pre_dim)
         target2[normal] += int((target2[too_big]-self.len_pre_dim).sum()/normal.sum())
         target2[too_big]=self.len_pre_dim-1 
-
+        print('lprobs2 is ')
+        print(lprobs2)
+        print('target2 is')
+        print(target2)
         nll_loss2 = -lprobs2.gather(dim=-1, index=target2)      
         smooth_loss2 = -lprobs2.sum(dim=-1,keepdim=True)
         if reduce:
@@ -92,16 +95,10 @@ class GroupTransformerEntropy(FairseqCriterion):
         
         len_pre = len_pre.view(net_output[1]['attn'].shape[0],-1)
         target2 = target2.view(net_output[1]['attn'].shape[0],-1)
-        print('lenpre')
-        print(len_pre.sum(dim=-1))
-        print('target2')
-        print(target2.sum(dim=-1))
+
         acc2 = float(torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum())/float((len_pre.shape[0]))
         loss_total = loss+loss2
         nll_loss_total = nll_loss2 + nll_loss
-        print('acc2 should be ',acc2)
-
-        acc_loss = torch.tensor((1-acc2)*10,requires_grad=True).to(len_pre.device)
      
         return acc_loss,acc_loss, acc2
 

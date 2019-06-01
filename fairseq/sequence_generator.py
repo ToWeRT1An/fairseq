@@ -162,7 +162,7 @@ class SequenceGenerator(object):
         print(len_pre)
         L = torch.topk(len_pre,1,dim=-1)[-1].squeeze(-1).sum(dim=-1)
         print('topk')
-        print(torch.topk(len_pre,1,dim=-1)[-1].squeeze(-1).shape())
+        print(torch.topk(len_pre,1,dim=-1)[-1].squeeze(-1).shape)
         print('L ')
         print(L)
         print('tgt')

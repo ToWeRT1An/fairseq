@@ -93,22 +93,26 @@ class GroupIncrementalDecoder(FairseqDecoder):
         """Get normalized probabilities (or log probs) from a net's output."""
 
         def get_len_label(attns):
-            
+
             labels = torch.zeros(attns.shape[0],attns.shape[-1]).to(attns.device)
             for i in range(attns.shape[0]):
                 attn = attns[i]
-                values, indices = torch.topk(attn,2)
-                wrong_lines =(indices[:,0]==attn.shape[-1]-1)
+                values, indices = torch.topk(attn,1)
+            
+                wrong_lines =(indices==attn.shape[-1]-1)
+            
                 for j in range(len(wrong_lines)):
                     if wrong_lines[j]==1:
-                        indices[j][0]=indices[j][-1]
-                indices[len(wrong_lines)-1,0]=attn.shape[-1]-1
+                        for m in range(len(wrong_lines)):
+                            if m  not in indices:                   
+                                indices[j]=m
+                                break
 
+                indices[len(wrong_lines)-1,0]=attn.shape[-1]-1
                 label = torch.zeros(attn.shape).to(attns.device)
 
                 label = label.scatter_(1,indices[:,0].unsqueeze(-1),1).sum(dim=0)
                 labels[i]=label
-
             return labels
 
         len_pre_labels = get_len_label(net_output[1]['attn']).long().view(-1,1)

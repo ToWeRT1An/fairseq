@@ -147,13 +147,14 @@ class SequenceGenerator(object):
         # compute the encoder output for each beam
         encoder_outs = model.forward_encoder(encoder_input)
         # print len_pre 
-        print('sample is ------')
-        print(sample['target'].shape)
+
         tgt_len = torch.zeros(sample['target'].shape[0]).\
             new_full((sample['target'].shape[0],1),sample['target'].shape[1]).int().to(sample['target'].device)
+        print('tgt_len is ')
+        print(tgt_len.shape)
         print('encoder_out is')
-        print(encoder_outs[0]['len_pre'])
-        len_pre = encoder_outs[0]['len_pre'].sum(dim=-1).int().to(sample['target'].device)
+        print(encoder_outs[0]['len_pre'].shape)
+        len_pre = torch.topk(encoder_outs[0]['len_pre'],1)[-1].squeeze(-1).sum(dim=-1)
         print('len_pre is')
         print(len_pre)
         acc=torch.eq(tgt_len.squeeze(-1),len_pre).sum().float()/float(sample['target'].shape[0])     

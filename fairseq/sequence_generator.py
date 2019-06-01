@@ -162,7 +162,7 @@ class SequenceGenerator(object):
             print(len_pre)
             acc=torch.eq(tgt_len.squeeze(-1),len_pre.int()).sum().float()/float(sample['target'].shape[0])     
             accs.append(acc)
-        print('len pre acc is {:10.4f}'.format(max(acc)[0]))
+        print('len pre acc is {:10.4f}'.format(max(accs)[0]))
 
         new_order = torch.arange(bsz).view(-1, 1).repeat(1, beam_size).view(-1)
         new_order = new_order.to(src_tokens.device).long()

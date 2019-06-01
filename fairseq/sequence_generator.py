@@ -147,25 +147,18 @@ class SequenceGenerator(object):
         # compute the encoder output for each beam
         encoder_outs = model.forward_encoder(encoder_input)
         # print len_pre 
-        print('encoder_input is ')
-        print(encoder_input['src_tokens'].shape)
+
         tgt_len = torch.zeros(sample['target'].shape[0]).\
             new_full((sample['target'].shape[0],1),sample['target'].shape[1]).int().to(sample['target'].device)
-        print('tgt_len is ')
-        print(tgt_len.shape)
-        print('encoder_out is')
-        print(encoder_outs[0]['len_pre'].shape)
-        accs = []
-        for b in range(beam_size):
-            v,index = torch.topk(encoder_outs[0]['len_pre'][b],1)
-            print('indix is ')
-            print(index)
-            len_pre = index.squeeze(-1).sum(dim=-1)
-            print('len_pre is')
-            print(len_pre)
-            acc=torch.eq(tgt_len.squeeze(-1),len_pre.int()).sum().float()/float(sample['target'].shape[0])     
-            accs.append(acc)
-        print('len pre acc is{}'.format(max(accs)))
+
+        
+        len_pre = encoder_outs[0]['len_pre'].transpose(0,1).to(sample['target'].device)
+      
+        L = torch.topk(len_pre,1)[-1].squeeze(-1).sum(dim=-1)
+        print(L.shape)
+        acc=torch.eq(tgt_len.squeeze(-1),L.int()).sum().float()/float(sample['target'].shape[0]) 
+
+        print('len pre acc is{}'.format(acc))
 
         new_order = torch.arange(bsz).view(-1, 1).repeat(1, beam_size).view(-1)
         new_order = new_order.to(src_tokens.device).long()

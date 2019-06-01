@@ -154,7 +154,7 @@ class SequenceGenerator(object):
 
         accs = []
         for beam_num in range(beam_size):
-            print('encoder_out size ',encoder_outs.size)
+            print('encoder_out size ',len(encoder_outs))
             len_pre = encoder_outs[beam_num]['len_pre'].sum().int().to(sample['target'].device)
             accs.append(torch.eq(tgt_len.squeeze(-1),len_pre).sum().float()/sample['target'].shape[0])
         print('len pre acc is ',max(accs))

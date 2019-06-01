@@ -155,7 +155,10 @@ class SequenceGenerator(object):
         len_pre = encoder_outs[0]['len_pre'].transpose(0,1).to(sample['target'].device)
 
         L = torch.topk(len_pre,1,dim=-1)[-1].squeeze(-1).sum(dim=-1)
-
+        print('L')
+        print(L)
+        print('tgt')
+        print(tgt_len)
         acc=torch.eq(tgt_len.squeeze(-1),L.int()).sum().float()/float(sample['target'].shape[0]) 
 
         print('len pre acc is{}'.format(acc))

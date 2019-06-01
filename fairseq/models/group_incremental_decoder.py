@@ -93,33 +93,31 @@ class GroupIncrementalDecoder(FairseqDecoder):
         """Get normalized probabilities (or log probs) from a net's output."""
 
         def get_len_label(attns):
-            print('before get len label')
+
             labels = torch.zeros(attns.shape[0],attns.shape[-1]).to(attns.device)
             for i in range(attns.shape[0]):
                 attn = attns[i]
                 values, indices = torch.topk(attn,1)
-              
+            
                 wrong_lines =(indices==attn.shape[-1]-1)
-                all_share = 0
-                for j in range(len(wrong_lines)):
-                    if wrong_lines[j]==1:
-                        for m in range(attn.shape[-1]):
-                            if m in indices and m == attn.shape[-1]-1:
-                                indices[j] = all_share
-                                all_share = (all_share+1)%attn.shape[-1]
-                         
-                            if m  not in indices :
-                                
-                                indices[j]=m
-                         
-                                break
-
-                indices[len(wrong_lines)-1,0]=attn.shape[-1]-1
                 label = torch.zeros(attn.shape).to(attns.device)
-           
+                
                 label = label.scatter_(1,indices[:,0].unsqueeze(-1),1).sum(dim=0)
+
+                wrong_col = (label == 0)
+                
+                mask1 = wrong_lines.repeat(1,attn.shape[-1])
+                mask2 = wrong_col.repeat(attn.shape[0],1)
+                mask = mask1.mul(mask2)
+                maskb = mask.float()
+
+                a=(maskb.masked_fill(mask.byte(),1.0/float(wrong_col.sum())).sum(dim=0))
+            
+                
+                label[-1]=1
+                label = label + a.float()
+                print(label)
                 labels[i]=label
-            print('out get len label')
             return labels
 
         len_pre_labels = get_len_label(net_output[1]['attn']).long().view(-1,1)

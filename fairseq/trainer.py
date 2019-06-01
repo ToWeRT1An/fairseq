@@ -75,8 +75,7 @@ class Trainer(object):
             self.meters['loss_scale'] = AverageMeter()  # dynamic loss scale
         self.meters['wall'] = TimeMeter()      # wall time in seconds
         self.meters['train_wall'] = StopwatchMeter()  # train wall time in seconds
-        self.meters['train_acc'] = AverageMeter()
-        self.meters['valid_acc'] = AverageMeter()
+
      
     @property
     def model(self):
@@ -351,10 +350,6 @@ class Trainer(object):
                 1. if grad_norm > self.args.clip_norm and self.args.clip_norm > 0 else 0.
             )
             self.meters['train_loss'].update(logging_output.get('loss', 0), sample_size)
-            if 'train_acc' in self.meters:
-
-                self.meters['train_acc'].update(
-                    logging_output.get('acc', 0), sample_size)
             if 'nll_loss' in logging_output:
                 self.meters['train_nll_loss'].update(logging_output.get('nll_loss', 0), ntokens)
         except OverflowError as e:

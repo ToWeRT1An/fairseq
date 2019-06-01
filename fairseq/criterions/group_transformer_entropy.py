@@ -93,8 +93,8 @@ class GroupTransformerEntropy(FairseqCriterion):
         print(len_pre.shape)
         acc1 = torch.eq(len_pre,target2).sum()/(len_pre.shape[0])
         
-        len_pre.view(net_output[1]['attn'].shape[0],-1)
-        target2.view(net_output[1]['attn'].shape[0],-1)
+        len_pre = len_pre.view(net_output[1]['attn'].shape[0],-1)
+        target2 = target2.view(net_output[1]['attn'].shape[0],-1)
         print('attn shape ')
         print(net_output[1]['attn'].shape)
 

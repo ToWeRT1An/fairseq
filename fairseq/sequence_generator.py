@@ -157,8 +157,10 @@ class SequenceGenerator(object):
         print(encoder_outs[0]['len_pre'].shape)
         accs = []
         for b in range(beam_size):
-
-            len_pre = torch.topk(encoder_outs[0]['len_pre'][b],1)[-1].squeeze(-1).sum(dim=-1)
+            v,index = torch.topk(encoder_outs[0]['len_pre'][b],1)
+            print('indix is ')
+            print(index)
+            len_pre = index.squeeze(-1).sum(dim=-1)
             print('len_pre is')
             print(len_pre)
             acc=torch.eq(tgt_len.squeeze(-1),len_pre.int()).sum().float()/float(sample['target'].shape[0])     

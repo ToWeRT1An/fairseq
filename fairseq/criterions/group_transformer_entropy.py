@@ -100,7 +100,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         loss_total = loss+loss2
         nll_loss_total = nll_loss2 + nll_loss
         print('acc2 should be ',acc2)
-        return loss2, nll_loss2, acc2
+        return (1-acc2)*10, (1-acc2)*10, acc2
 
     @staticmethod
     def aggregate_logging_outputs(logging_outputs):

@@ -153,7 +153,10 @@ class SequenceGenerator(object):
 
         
         len_pre = encoder_outs[0]['len_pre'].transpose(0,1).to(sample['target'].device)
-      
+        print('src_tokens')
+        print(src_tokens.shape)
+        print('tgt_tokens')
+        print(sample['target'].shape)
         L = torch.topk(len_pre,1)[-1].squeeze(-1).sum(dim=-1)
         print('L ')
         print(L)

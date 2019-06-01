@@ -96,6 +96,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         acc2 = float(torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum())/float((len_pre.shape[0]))
         loss_total = loss+loss2
         nll_loss_total = nll_loss2 + nll_loss
+        print('acc2 should be ',acc2)
         return loss_total, nll_loss_total, acc2
 
     @staticmethod

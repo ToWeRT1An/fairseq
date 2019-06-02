@@ -114,7 +114,7 @@ class GroupIncrementalDecoder(FairseqDecoder):
                     a=(maskb.masked_fill(mask.byte(),1.0/float(wrong_col.sum())).sum(dim=0)).ceil()
                 else :
                     label[0]+=1
-                    a = maskb.masked_fill(mask.byte(),0)
+                    a =(maskb.masked_fill(mask.byte(),0).sum(dim=0))
                 
                 label[-1]=1
                 label = label + a.float()

@@ -118,7 +118,7 @@ class GroupIncrementalDecoder(FairseqDecoder):
                 
                 label[-1]=1
                 label = label + a.float()
-                print(label)
+                
                 labels[i]=label
             return labels
 

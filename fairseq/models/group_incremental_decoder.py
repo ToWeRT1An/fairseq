@@ -91,7 +91,7 @@ class GroupIncrementalDecoder(FairseqDecoder):
             self._beam_size = beam_size
     def get_normalized_probs(self, net_output, log_probs, sample):
         """Get normalized probabilities (or log probs) from a net's output."""
-
+        #get (N * Src_len,1) label
         def get_len_label(attns):
 
             labels = torch.zeros(attns.shape[0],attns.shape[-1]).to(attns.device)

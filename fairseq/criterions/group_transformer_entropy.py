@@ -49,7 +49,7 @@ class GroupTransformerEntropy(FairseqCriterion):
             'sample_size': sample_size,
             'acc': acc
         }
-        print('acc2 is ',acc)
+        
         return loss, sample_size, logging_output
 
     def compute_loss(self, model, net_output, sample, reduce=True):
@@ -61,7 +61,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         attns = net_output[1]['attn']
         loss_eos =  attns[:,:,-1][:,:-1].sum()
         loss_eos = loss_eos.float()
-        print('loss_eos is {}'.loss_eos)
+        print('loss_eos is {}'.format(loss_eos))
 
         non_pad_mask = target.ne(self.padding_idx)
         nll_loss = -lprobs.gather(dim=-1, index=target)[non_pad_mask]
@@ -103,15 +103,7 @@ class GroupTransformerEntropy(FairseqCriterion):
         
         len_pre = len_pre.view(net_output[1]['attn'].shape[0],-1)
         target2 = target2.view(net_output[1]['attn'].shape[0],-1)
-        print('lenpre is ')
-        print(len_pre)
-        print(len_pre.sum(dim=-1))
-        print(len_pre.shape)
-        print('target2 is')
-        print((target2==0).sum())
-        print(target2)
-        print(target2.sum(dim=-1))
-        print(target2.shape)
+
         acc2 = float(torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum())/float((len_pre.shape[0]))
         loss_total = loss+loss2
         nll_loss_total = nll_loss2 + nll_loss

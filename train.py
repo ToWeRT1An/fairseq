@@ -52,13 +52,13 @@ def main(args, init_distributed=False):
 
     #------set part of the model trainnable
     for i, parm in  enumerate(list(model.parameters())):
-        '''
+        
         if i == 73 or i == 74:
-            parm.requires_grad = True
-        elif i !=0 :
             parm.requires_grad = False
-        '''
-        parm.requires_grad = True
+        elif i !=0 :
+            parm.requires_grad = True
+        
+        #parm.requires_grad = True
         print('id: ',i,' shape ',parm.shape,'trainnable',parm.requires_grad)
 
 

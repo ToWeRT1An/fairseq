@@ -110,7 +110,7 @@ class GroupIncrementalDecoder(FairseqDecoder):
                 mask2 = wrong_col.repeat(attn.shape[0],1)
                 mask = mask1.mul(mask2)
                 maskb = mask.float()
-                if wrong_col != 0:
+                if wrong_col.sum() != 0:
                     a=(maskb.masked_fill(mask.byte(),1.0/float(wrong_col.sum())).sum(dim=0))
                 else :
                     a=(maskb.masked_fill(mask.byte(),1.0/float(attn.shape[-1])).sum(dim=0))

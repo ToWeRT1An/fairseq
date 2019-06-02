@@ -94,10 +94,12 @@ class GroupTransformerEntropy(FairseqCriterion):
         target2 = target2.view(net_output[1]['attn'].shape[0],-1)
         print('lenpre is ')
         print(len_pre)
+        print(len_pre.sum(dim=-1))
         print(len_pre.shape)
         print('target2 is')
         print((target2==0).sum())
         print(target2)
+        print(target2.sum(dim=-1))
         print(target2.shape)
         acc2 = float(torch.eq(len_pre.sum(dim=-1),target2.sum(dim=-1)).sum())/float((len_pre.shape[0]))
         loss_total = loss+loss2

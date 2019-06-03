@@ -123,7 +123,7 @@ class GroupIncrementalDecoder(FairseqDecoder):
             return labels
 
         len_pre_labels = get_len_label(net_output[1]['attn']).long().view(-1,1)
-
+        
         if hasattr(self, 'adaptive_softmax') and self.adaptive_softmax is not None:
             if sample is not None:
                 assert 'target' in sample

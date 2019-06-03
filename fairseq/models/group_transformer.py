@@ -10,7 +10,9 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from fairseq.scripts.save_matrix_to_img import save_attn
+
+from fairseq.save_matrix_to_img import save_attn
+
 from fairseq import options, utils
 from fairseq.models import (
     FairseqEncoder,

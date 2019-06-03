@@ -10,7 +10,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
+from fairseq.scripts.save_matrix_to_img import save_attn
 from fairseq import options, utils
 from fairseq.models import (
     FairseqEncoder,
@@ -108,6 +108,9 @@ class TransformerModel(FairseqEncoderDecoderModel):
 
         parser.add_argument('--length-pre-dim',type=int,metavar='N',
                             help='max num per word translate')
+        parser.add_argument('--save-attn',default=False, action='store_true',
+                            help='if set, disables positional embeddings (outside self attention)')
+        parser.add_argument('--save-attn-path',type=str)
         # fmt: on
 
     @classmethod
@@ -356,6 +359,8 @@ class TransformerDecoder(GroupIncrementalDecoder):
         self.normalize = args.decoder_normalize_before and final_norm
         if self.normalize:
             self.layer_norm = LayerNorm(embed_dim)
+        self.save_attn = args.save_attn
+        self.save_attn_path = args.save_attn_path
 
     def forward(self, prev_output_tokens, encoder_out=None, incremental_state=None, **unused):
         """
@@ -432,7 +437,8 @@ class TransformerDecoder(GroupIncrementalDecoder):
 
         if self.project_out_dim is not None:
             x = self.project_out_dim(x)
-
+        if self.save_attn == True:
+            save_attn(attn,self.save_attn_path)
         return x, {'attn': attn, 'inner_states': inner_states,
                    'len_pre':encoder_out['len_pre'] if encoder_out is not None else None}
 
@@ -788,3 +794,5 @@ def base_architecture(args):
     args.decoder_output_dim = getattr(args, 'decoder_output_dim', args.decoder_embed_dim)
     args.decoder_input_dim = getattr(args, 'decoder_input_dim', args.decoder_embed_dim)
     args.length_pre_dim = getattr(args,'length_pre_dim',49)
+    args.save_attn = getattr(args,'save_attn',False)
+    args.save_attn_path = getattr(args,'save_attn_path','./img')

@@ -151,7 +151,7 @@ class SequenceGenerator(object):
         tgt_len = torch.zeros(sample['target'].shape[0]).\
             new_full((sample['target'].shape[0],1),sample['target'].shape[1]).int().to(sample['target'].device)
 
-        if encoder_outs[0]['len_pre'] is not None:
+        try:
             len_pre = encoder_outs[0]['len_pre'].transpose(0,1).to(sample['target'].device)
 
             L = torch.topk(len_pre,1,dim=-1)[-1].squeeze(-1).sum(dim=-1)
@@ -159,6 +159,8 @@ class SequenceGenerator(object):
             acc=torch.eq(tgt_len.squeeze(-1),L.int()).sum().float()/float(sample['target'].shape[0]) 
 
             print('len pre acc is{}'.format(acc))
+        except KeyError a:
+            print('no len_pre ',a)
 
         new_order = torch.arange(bsz).view(-1, 1).repeat(1, beam_size).view(-1)
         new_order = new_order.to(src_tokens.device).long()

@@ -159,7 +159,7 @@ class SequenceGenerator(object):
             acc=torch.eq(tgt_len.squeeze(-1),L.int()).sum().float()/float(sample['target'].shape[0]) 
 
             print('len pre acc is{}'.format(acc))
-        except KeyError a:
+        except KeyError, a:
             print('no len_pre ',a)
 
         new_order = torch.arange(bsz).view(-1, 1).repeat(1, beam_size).view(-1)

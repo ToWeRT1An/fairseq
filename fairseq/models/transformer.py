@@ -13,7 +13,6 @@ import torch.nn.functional as F
 
 from fairseq.save_matrix_to_img import save_attn
 
-
 from fairseq import options, utils
 from fairseq.models import (
     FairseqEncoder,

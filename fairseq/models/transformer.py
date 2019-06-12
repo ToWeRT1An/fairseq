@@ -247,6 +247,8 @@ class TransformerEncoder(FairseqEncoder):
         return {
             'encoder_out': x,  # T x B x C
             'encoder_padding_mask': encoder_padding_mask,  # B x T
+            #--------------------------------------------------------
+            'src_tokens',self.dictionary.string(src_tokens),
         }
 
     def reorder_encoder_out(self, encoder_out, new_order):
@@ -363,6 +365,7 @@ class TransformerDecoder(FairseqIncrementalDecoder):
         #----------------------------
         self.save_attn = args.save_attn
         self.save_attn_path = args.save_attn_path
+
     def forward(self, prev_output_tokens, encoder_out=None, incremental_state=None, **unused):
         """
         Args:
@@ -439,7 +442,8 @@ class TransformerDecoder(FairseqIncrementalDecoder):
             x = self.project_out_dim(x)
         #---------------------------------------------------
         if self.save_attn == True:
-            save_attn(attn,self.save_attn_path)
+            save_attn(attn,self.save_attn_path,self.dictionary.string(prev_output_tokens),
+                encoder_out['src_tokens'])
             
         return x, {'attn': attn, 'inner_states': inner_states}
 

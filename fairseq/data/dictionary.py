@@ -62,7 +62,9 @@ class Dictionary(object):
             else:
                 return self[i]
 
-        sent = ' '.join(token_string(i) for i in tensor if i != self.eos())
+        #sent = ' '.join(token_string(i) for i in tensor if i != self.eos())
+        #---------------------------------------------------------------------
+        sent = ' '.join(token_string(i) for i in tensor)
         return data_utils.process_bpe_symbol(sent, bpe_symbol)
 
     def unk_string(self, escape=False):

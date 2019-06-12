@@ -10,7 +10,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
+from fairseq.save_matrix_to_img import save_attn
 from fairseq import options, utils
 from fairseq.models import (
     FairseqEncoder,
@@ -106,6 +106,9 @@ class TransformerModel(FairseqEncoderDecoderModel):
         parser.add_argument('--adaptive-softmax-dropout', type=float, metavar='D',
                             help='sets adaptive softmax dropout for the tail projections')
         # fmt: on
+        parser.add_argument('--save-attn',default=False, action='store_true',
+                            help='if set, disables positional embeddings (outside self attention)')
+        parser.add_argument('--save-attn-path',type=str)
 
     @classmethod
     def build_model(cls, args, task):
@@ -357,7 +360,9 @@ class TransformerDecoder(FairseqIncrementalDecoder):
             self.layer_norm = LayerNorm(embed_dim)
         else:
             self.layer_norm = None
-
+        #----------------------------
+        self.save_attn = args.save_attn
+        self.save_attn_path = args.save_attn_path
     def forward(self, prev_output_tokens, encoder_out=None, incremental_state=None, **unused):
         """
         Args:
@@ -432,7 +437,10 @@ class TransformerDecoder(FairseqIncrementalDecoder):
 
         if self.project_out_dim is not None:
             x = self.project_out_dim(x)
-
+        #---------------------------------------------------
+        if self.save_attn == True:
+            save_attn(attn,self.save_attn_path)
+            
         return x, {'attn': attn, 'inner_states': inner_states}
 
     def output_layer(self, features, **kwargs):
@@ -703,7 +711,7 @@ class TransformerDecoderLayer(nn.Module):
                 key_padding_mask=encoder_padding_mask,
                 incremental_state=incremental_state,
                 static_kv=True,
-                need_weights=(not self.training and self.need_attn),
+                need_weights=True,
             )
             x = F.dropout(x, p=self.dropout, training=self.training)
             x = residual + x
@@ -778,6 +786,8 @@ def base_architecture(args):
 
     args.decoder_output_dim = getattr(args, 'decoder_output_dim', args.decoder_embed_dim)
     args.decoder_input_dim = getattr(args, 'decoder_input_dim', args.decoder_embed_dim)
+    args.save_attn = getattr(args,'save_attn',False)
+    args.save_attn_path = getattr(args,'save_attn_path','./img')
 
 
 @register_model_architecture('transformer', 'transformer_iwslt_de_en')
@@ -790,11 +800,15 @@ def transformer_iwslt_de_en(args):
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 1024)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 4)
     args.decoder_layers = getattr(args, 'decoder_layers', 6)
+    args.save_attn = getattr(args,'save_attn',False)
+    args.save_attn_path = getattr(args,'save_attn_path','./img')
     base_architecture(args)
 
 
 @register_model_architecture('transformer', 'transformer_wmt_en_de')
 def transformer_wmt_en_de(args):
+    args.save_attn = getattr(args,'save_attn',False)
+    args.save_attn_path = getattr(args,'save_attn_path','./img')
     base_architecture(args)
 
 
@@ -809,18 +823,24 @@ def transformer_vaswani_wmt_en_de_big(args):
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 4096)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 16)
     args.dropout = getattr(args, 'dropout', 0.3)
+    args.save_attn = getattr(args,'save_attn',False)
+    args.save_attn_path = getattr(args,'save_attn_path','./img')
     base_architecture(args)
 
 
 @register_model_architecture('transformer', 'transformer_vaswani_wmt_en_fr_big')
 def transformer_vaswani_wmt_en_fr_big(args):
     args.dropout = getattr(args, 'dropout', 0.1)
+    args.save_attn = getattr(args,'save_attn',False)
+    args.save_attn_path = getattr(args,'save_attn_path','./img')
     transformer_vaswani_wmt_en_de_big(args)
 
 
 @register_model_architecture('transformer', 'transformer_wmt_en_de_big')
 def transformer_wmt_en_de_big(args):
     args.attention_dropout = getattr(args, 'attention_dropout', 0.1)
+    args.save_attn = getattr(args,'save_attn',False)
+    args.save_attn_path = getattr(args,'save_attn_path','./img')
     transformer_vaswani_wmt_en_de_big(args)
 
 
@@ -831,4 +851,6 @@ def transformer_wmt_en_de_big_t2t(args):
     args.decoder_normalize_before = getattr(args, 'decoder_normalize_before', True)
     args.attention_dropout = getattr(args, 'attention_dropout', 0.1)
     args.activation_dropout = getattr(args, 'activation_dropout', 0.1)
+    args.save_attn = getattr(args,'save_attn',False)
+    args.save_attn_path = getattr(args,'save_attn_path','./img')
     transformer_vaswani_wmt_en_de_big(args)

@@ -15,7 +15,7 @@ def save_attn(m,file_path ,xlabel='auto',ylabel='auto'):
         figure(num=None, figsize=(m.shape[1]*2,m.shape[2]*2), dpi=80, facecolor='w', edgecolor='k')
         for i in range(m.shape[0]):
             
-            hm = sn.heatmap(m[i],annot=True,fmt='10.1f',xticklabels=xlabel,yticklabels=ylabel)
+            hm = sn.heatmap(m[i],annot=True,fmt='10.1f',xticklabels=xlabel[i],yticklabels=ylabel[i])
             plt.savefig(file_path+'/'+str(i)+'_'+str(m.shape[0])+'_'+\
                        str(m.shape[1])+'_'+str(m.shape[-1])+'.jpg')
  

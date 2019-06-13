@@ -7,7 +7,7 @@ from torchvision import transforms
 from matplotlib import pyplot as plt
 from matplotlib.pyplot import figure
 import seaborn as sn
-figure(num=None, figsize=(20,20), dpi=80, facecolor='w', edgecolor='k')
+
 import matplotlib as mpl
 
 def save_attn(m,file_path ,xlabel='auto',ylabel='auto'):

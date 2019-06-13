@@ -41,12 +41,7 @@ def collate_tokens(values, pad_idx, eos_idx=None, left_pad=False, move_eos_to_be
     for i, v in enumerate(values):
         copy_tensor(v, res[i][size - len(v):] if left_pad else res[i][:len(v)])
     # need to exam what's pad idx and what's eos idx 
-    print('in data_utils.py')
-    print('eos idx {}'.format(eos_idx))
-    print('pad idx {}'.format(pad_idx))
-    print('res shape is {}'.format(res.shape))
-    print('res is ')
-    print(res[:3])
+
     return res
 
 

@@ -247,7 +247,7 @@ class TransformerEncoder(FairseqEncoder):
         print('src_tokens')
         print(src_tokens[:5])
         print('src_dict')
-        print(src_dict.string(src_tokens[:5]))
+        print(self.dictionary.string(src_tokens[:5]))
         return {
             'encoder_out': x,  # T x B x C
             'encoder_padding_mask': encoder_padding_mask,  # B x T

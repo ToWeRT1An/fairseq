@@ -248,7 +248,7 @@ class TransformerEncoder(FairseqEncoder):
             'encoder_out': x,  # T x B x C
             'encoder_padding_mask': encoder_padding_mask,  # B x T
             #--------------------------------------------------------
-            'src_tokens',self.dictionary.string(src_tokens),
+            'src_tokens':self.dictionary.string(src_tokens),
         }
 
     def reorder_encoder_out(self, encoder_out, new_order):

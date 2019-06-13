@@ -11,6 +11,7 @@ figure(num=None, figsize=(20,20), dpi=80, facecolor='w', edgecolor='k')
 import matplotlib as mpl
 
 def save_attn(m,file_path ,xlabel='auto',ylabel='auto'):
+    m = m.numpy()
     if len(m.shape) == 3:
         figure(num=None, figsize=(m.shape[1]*2,m.shape[2]*2), dpi=80, facecolor='w', edgecolor='k')
         for i in range(m.shape[0]):
